@@ -5,6 +5,7 @@
 The purpose of this project is to showcase the creation and securing of a cloud network in Azure. The project includes three parts:  network/SOC creation, exposure of the network to the public internet, and finally incident response and hardening using NIST 800-53 and NIST 800-61. The network includes two virtual machines, a SQL server, blob storage, and a key vault--with a log to capture events from the rest of the network. From there, Microsoft Sentinel (SIEM) is used to scan the event log for security incidents, trigger alerts, and create attack maps.
 
 ## Architecture Before Hardening & Security Controls
+
 ![Azure-SOC-Insecure](https://github.com/okaynick/cloud-soc/assets/10458811/98d417b6-20fd-4cd0-aa09-006d683efed6)
 
 The network consists of the following:
@@ -44,9 +45,12 @@ I created workbooks in Sentinel to map the attackers based on their IP address. 
 ![BEFORE-windows-rdp-failed-auth](https://github.com/okaynick/cloud-soc/assets/10458811/ad6cea20-d5d6-4e06-ba70-96beeb8ee40a)<br>
 
 ## Architecture After Hardening & Security Controls
+
+![Azure-SOC-secured](https://github.com/okaynick/cloud-soc/assets/10458811/b1a3323e-e874-4db3-aedf-e855784638e6)
+
 At the conclusion of the 24 hours of running an insecure network, I handled the security incidents in Sentinel, noting specific vulnerabilities and closing the incidents. Other than the incidents I triggered, most of the incidents were brute force attempts.
 
-Additionally, I added NIST 800-53 controls to Microsoft Defender for Cloud, specifically SC-7 "Boundary Protection." I hardened the environment using these guidelines and the learnings gained from the security incidents. The Network Security Groups were hardening by allowing access to only my personal IP. All other resources were protected by resorting the default settings of the built-in firewalls.
+Additionally, I added NIST 800-53 controls to Microsoft Defender for Cloud, specifically SC-7 "Boundary Protection." I hardened the environment using these guidelines and the learnings gained from the security incidents. The Virtual Network was hardened by setting the NSGs to only allow access from my personal IP. Build-in firewalls were restored to default settings in the VMs. Blob storage and the key vault were placed inside another NSG and given private endpoints so that only devices within the Virtual Network can access them. This was tested by running ```nslookup``` on the domain of each resource inside and outside the Virtual Network. Pings within the network returned an accessible IP address, while those outside returned a private IP address not accessible by the public internet.
 
 ## Metrics After Hardening & Security Controls
 
